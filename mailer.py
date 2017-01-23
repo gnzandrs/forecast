@@ -8,10 +8,13 @@ def send_emails(emails, message, forecast):
     server.starttls()
 
     # Login
-    # password = input("What's your password?")
-    password = 'yourpassword'
-    from_email = 'youremail'
-    server.login(from_email, password)
+    try:
+        from_email = input("What's your email?\n")
+        password = input("What's your password?\n")
+        server.login(from_email, password)
+    except smtplib.SMTPAuthenticationError as err:
+        print('Wrong Authentication!')
+        exit()
 
     # Send to entire email list
     for to_email, name in emails.items():
@@ -22,4 +25,7 @@ def send_emails(emails, message, forecast):
         text += 'See you there!'
         server.sendmail(from_email, to_email, text)
 
+    print('The email message was successfully sent to: \n')
+    for to_email, name in emails.items():
+        print(to_email + '\n\n')
     server.quit()
